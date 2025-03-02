@@ -9,3 +9,5 @@ def send_welcome(message):
 @bot.message_handler(commands=['help'])
 def send_welcome(message):
 	bot.reply_to(message, "Вам доступны команды: ")
+
+bot.infinity_polling()
