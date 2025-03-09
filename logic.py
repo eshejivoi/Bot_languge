@@ -1,6 +1,6 @@
 import random
 
-# Список вопросов для теста с несколькими правильными ответами
+
 test_questions = {
     "A1": [
         ("What's your name?", [["My name is John", "I am from London"], "Hello"]),
@@ -50,7 +50,6 @@ def get_test_question(level):
 
 # Функция для проверки ответа (с несколькими правильными ответами)
 def check_answer(user_answer, correct_answers):
-    # Проверяем, есть ли ответ пользователя среди правильных
     return user_answer in correct_answers
 
 # Прогресс пользователя: сохранение его результатов
