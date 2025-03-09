@@ -3,7 +3,8 @@ from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 from translator.translator import Translator
 
 from config import TOKEN
-from logic import test_questions, translate_text
+from logic import *
+from text import test_questions
 import random
 
 bot = telebot.TeleBot(TOKEN)
