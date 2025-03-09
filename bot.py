@@ -1,11 +1,19 @@
 import telebot
+from telebot.types import ReplyKeyboardMarkup, KeyboardButton
+from translator.translator import Translator
+
 from config import TOKEN
-from logic import test_questions
+from logic import test_questions, translate_text
 import random
 
 bot = telebot.TeleBot(TOKEN)
 user_states = {}
 
+
+
+
+
+translator = Translator()
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
@@ -105,5 +113,42 @@ def calculate_result(user_id):
     bot.send_message(user_id, f"🏆 Результат теста:\nУровень: {level}\nПравильных ответов: {correct}/{total}")
 
 
+
+# Main menu
+main_menu = ReplyKeyboardMarkup(resize_keyboard=True)
+main_menu.add(KeyboardButton("✨ Переводчик"))
+main_menu.add(KeyboardButton("💡 Изучение языка"))
+
+# Language selection menu
+lang_menu = ReplyKeyboardMarkup(resize_keyboard=True)
+langs = {"🇫🇷 Французский": "fr", "🇮🇹 Итальянский": "it",
+         "🇩🇪 Немецкий": "de", "🇪🇸 Испанский": "es", "🇬🇧 Английский": "en"}
+for lang in langs.keys():
+    lang_menu.add(KeyboardButton(lang))
+
+user_mode = {}
+user_lang = {}
+
+@bot.message_handler(commands=['start'])
+def send_welcome(message):
+    bot.send_message(message.chat.id, "Привет! Выбери режим:", reply_markup=main_menu)
+
+@bot.message_handler(func=lambda message: message.text in ["✨ Переводчик", "💡 Изучение языка"])
+def choose_mode(message):
+    user_mode[message.chat.id] = message.text
+    bot.send_message(message.chat.id, "Выбери язык:", reply_markup=lang_menu)
+
+@bot.message_handler(func=lambda message: message.text in langs.keys())
+def choose_language(message):
+    user_lang[message.chat.id] = langs[message.text]
+    if user_mode[message.chat.id] == "✨ Переводчик":
+        bot.send_message(message.chat.id, "Отправь мне текст для перевода.")
+
+
+@bot.message_handler(func=lambda message: message.chat.id in user_lang)
+def handle_text(message):
+    if user_mode[message.chat.id] == "✨ Переводчик":
+        translated_text = translate_text(message.text, user_lang[message.chat.id])
+        bot.send_message(message.chat.id, f"Перевод: {translated_text}")
 if __name__ == "__main__":
     bot.polling(none_stop=True)

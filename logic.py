@@ -87,3 +87,4 @@ def recognize_speech(audio_file_path):
 def check_pronunciation(user_audio_text, correct_phrase):
     return user_audio_text.strip().lower() == correct_phrase.strip().lower()
 
+
