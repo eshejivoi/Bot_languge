@@ -1,5 +1,11 @@
 import random
 import speech_recognition as sr
+from googletrans import Translator
+
+def translate_text(text, dest_lang):
+    translator = Translator()
+    translated = translator.translate(text, dest=dest_lang)
+    return translated.text
 
 
 test_questions = {
